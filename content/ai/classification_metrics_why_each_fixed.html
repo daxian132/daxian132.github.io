@@ -1,0 +1,187 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>为什么需要这么多分类指标</title>
+<style>
+:root{--bg:#f4f6fa;--paper:#fff;--ink:#172033;--muted:#687386;--line:#e2e7ef;--blue:#315efb;--green:#16845b;--red:#c44949;--amber:#a76512;--purple:#7554c7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.45}main{max-width:1080px;margin:auto;padding:22px 18px 38px}header{margin-bottom:12px}.k{font-size:10px;color:var(--blue);font-weight:800;letter-spacing:.12em}h1{font-size:25px;margin:5px 0}.sub{font-size:11px;color:var(--muted);margin:0}.panel{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:13px;margin-top:11px;box-shadow:0 5px 20px #1720330a}.head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px}.head h2{font-size:14px;margin:0}.hint{font-size:9px;color:var(--muted)}
+.framework{display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr;gap:5px;align-items:stretch}.stage{border:1px solid var(--line);border-radius:9px;background:#fcfdff;padding:9px}.stage small{font-size:9px;color:var(--blue);font-weight:800}.stage b{display:block;font-size:12px;margin:3px 0}.stage p{font-size:10px;color:var(--muted);margin:0}.arrow{display:grid;place-items:center;color:#9aa6ba}.rule{font-size:10px;color:#475467;background:#f6f8fb;border-radius:7px;padding:8px 9px;margin-top:8px}.rule b{color:var(--ink)}
+.reasons{display:grid;grid-template-columns:1fr 1fr;gap:7px}.reason{display:grid;grid-template-columns:31px 1fr;gap:8px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:8px}.symbol{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:15px;font-weight:800}.reason b{font-size:10px}.reason p{font-size:9px;color:var(--muted);margin:2px 0 0}.fn .symbol{background:#fff5e5;color:var(--amber)}.fp .symbol{background:#fff0ef;color:var(--red)}.tp .symbol{background:#e9f7f0;color:var(--green)}.tn .symbol{background:#edf2ff;color:var(--blue)}
+.priority{display:flex;flex-wrap:wrap;gap:5px;margin:9px 0}.priority button,.tab{font:inherit;font-size:10px;border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:#fff;color:#475467;cursor:pointer}.priority button.active,.tab.active{background:#edf2ff;border-color:#aebfff;color:var(--blue);font-weight:750}.advice{background:#f8f9fc;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:10px;color:#475467}.advice b{color:var(--ink)}
+.work{display:grid;grid-template-columns:1fr 1fr;gap:11px;align-items:start}.matrix{display:grid;grid-template-columns:59px 1fr 1fr;grid-template-rows:29px 1fr 1fr;gap:4px}.axis{display:grid;place-items:center;text-align:center;font-size:9px;color:var(--muted);font-weight:700;line-height:1.3}.cell{min-height:82px;border-radius:8px;padding:7px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid transparent;transition:.18s}.cell .code{font-size:9px;font-weight:850}.cell .n{font-size:22px;font-weight:850;line-height:1}.cell .desc{font-size:9px}.tp{background:#e9f7f0;color:#116b4a}.fp{background:#fff0ef;color:#a93434}.fn{background:#fff5e5;color:#8b560d}.tn{background:#edf2ff;color:#294fc8}.cell.den{outline:2px solid currentColor;outline-offset:-2px}.cell.num{box-shadow:inset 0 0 0 3px currentColor}.cell.dim{opacity:.22;filter:grayscale(.5)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px;font-size:9px;color:var(--muted)}.dot{width:7px;height:7px;border-radius:2px;display:inline-block;margin-right:3px}.inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:9px}.ibox{border:1px solid var(--line);border-radius:7px;padding:5px}.ibox label{font-size:8px;color:var(--muted);display:block}.ibox input{width:100%;border:0;outline:0;font-size:15px;font-weight:800;background:transparent;color:var(--ink);padding:2px 0}.totals{display:flex;gap:10px;flex-wrap:wrap;font-size:9px;color:var(--muted);margin-top:6px}.totals b{color:var(--ink)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px}.tab{text-align:left;padding:6px 5px}.tab strong{display:block;font-size:10px}.tab small{font-size:8px;color:var(--muted)}.metric{border:1px solid var(--line);border-radius:9px;background:#fcfdff;padding:9px}.mtop{display:flex;justify-content:space-between;align-items:center;gap:7px}.mtop h3{font-size:12px;margin:0}.score{font-size:22px;color:var(--blue);font-weight:850}.question{font-size:10px;color:#475467;margin:4px 0 7px}.formula{background:#f0f3f8;border-radius:7px;padding:8px;text-align:center;font-size:12px;font-weight:800}.numtxt{color:var(--green)}.dentxt{color:var(--blue)}.fnote{text-align:center;font-size:8px;color:var(--muted);margin-top:4px}.range{font-size:9px;color:var(--muted);margin:8px 0 4px}.bar{height:31px;border-radius:6px;overflow:hidden;display:flex;background:#f0f2f6}.piece{display:flex;align-items:center;justify-content:center;min-width:0;padding:2px;font-size:8px;font-weight:800;border-right:1px solid #ffffffaa}.piece.tp{background:#d8f0e4;color:#116b4a}.piece.fp{background:#ffe0dd;color:#a93434}.piece.fn{background:#ffedcb;color:#8b560d}.piece.tn{background:#dfe7ff;color:#294fc8}.piece.hide{display:none}.meaning{font-size:9px;color:#344054;border:1px solid var(--line);border-radius:7px;background:#fff;padding:7px;margin-top:7px}
+.venn{border:1px solid var(--line);border-radius:8px;padding:7px;margin-top:8px}.venn b{font-size:9px}.venn small{display:block;font-size:8px;color:var(--muted)}svg{width:100%;height:auto;max-height:155px;display:block}.va{fill:#f1c85b;fill-opacity:.4;stroke:#b88618;stroke-width:1.5}.vb{fill:#6d8ff2;fill-opacity:.38;stroke:#315efb;stroke-width:1.5}.focus{stroke-width:3.5}.faded{opacity:.35}.vl{font-size:10px;font-weight:800;fill:#172033;text-anchor:middle}.vs{font-size:8px;fill:#475467;text-anchor:middle}.vinfo{font-size:8px;color:var(--muted)}
+.f1{display:none;background:#f2eeff;border:1px solid #e3dcff;border-radius:8px;padding:8px;margin-top:7px}.f1.show{display:block}.f1 b{font-size:9px;color:var(--purple)}.f1 p{font-size:9px;color:#514477;margin:4px 0 0}
+.f1-intro{font-size:10px;color:#514477;line-height:1.55}
+.f1-intro b{font-size:11px!important;color:var(--purple)!important}
+.avg-example{margin-top:9px;background:#fff;border:1px solid #e6e0f7;border-radius:8px;padding:8px}
+.avg-example-head{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:10px;font-weight:750}
+.avg-example-head span{font-size:9px;color:#6a6380;background:#f2eeff;padding:3px 6px;border-radius:5px}
+.avg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
+.avg-card{border:1px solid var(--line);border-radius:7px;padding:7px;min-width:0}
+.avg-card b{display:block;font-size:10px!important;color:var(--ink)!important}
+.avg-card .avg-value{font-size:19px;font-weight:850;line-height:1.25;margin:3px 0}
+.avg-card .avg-formula{font-size:9px;color:#475467;white-space:nowrap}
+.avg-card .avg-bar{height:6px;background:#edf0f5;border-radius:10px;overflow:hidden;margin:6px 0 4px}
+.avg-card .avg-bar span{display:block;height:100%;border-radius:10px}
+.avg-card small{display:block;font-size:8px;color:var(--muted);line-height:1.35}
+.avg-card.arith .avg-value{color:var(--blue)}.avg-card.arith .avg-bar span{background:var(--blue)}
+.avg-card.geo .avg-value{color:var(--amber)}.avg-card.geo .avg-bar span{background:#d69a35}
+.avg-card.harm .avg-value{color:var(--purple)}.avg-card.harm .avg-bar span{background:var(--purple)}
+.avg-explain{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
+.avg-explain div{font-size:8px;color:#596273;background:#f7f8fb;border-radius:6px;padding:6px}
+.avg-explain b{display:block;font-size:9px!important;color:#263247!important;margin-bottom:2px}
+.avg-live{margin-top:9px;border:1px solid #e3dcff;border-radius:8px;padding:8px;background:#fbfaff}
+.avg-live-head{font-size:10px;font-weight:750;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.avg-live-head span{font-size:9px;color:#6a6380;font-weight:500}
+.avg-live-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:6px}
+.avg-live-grid div{background:#fff;border:1px solid #ebe7f5;border-radius:6px;padding:6px}
+.avg-live-grid small{font-size:8px;color:var(--muted);display:block}
+.avg-live-grid strong{font-size:15px;color:#50389a}
+.harmonic-why{margin-top:9px;background:#fff;border:1px solid #e6e0f7;border-radius:8px;padding:8px}
+.harmonic-why b{font-size:10px!important;color:var(--purple)!important}
+.harmonic-why p{font-size:9px;color:#514477;margin:4px 0 0}
+.derivation{display:grid;gap:4px;margin-top:6px}
+.derivation div{font-size:10px;text-align:center;background:#f7f5fc;border-radius:6px;padding:6px;color:#40345f}
+.derivation strong{color:var(--purple)}
+.speed-example{margin-top:8px;background:#f7f8fb;border-radius:7px;padding:8px}
+.speed-example b{font-size:10px!important;color:var(--ink)!important}
+.speed-example p{font-size:9px;color:#475467;margin:4px 0 0}
+.f1-final{font-size:10px;color:#3f315f;background:#eee8ff;border-radius:7px;padding:8px;margin-top:8px}
+.f1-final strong{font-size:12px;color:var(--purple)}
+@media(max-width:480px){.avg-grid,.avg-explain{grid-template-columns:1fr}.avg-card{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:8px}.avg-card .avg-value{grid-column:2;grid-row:1/3}.avg-card .avg-formula{grid-column:1}.avg-card .avg-bar,.avg-card small{grid-column:1/-1}.avg-live-grid{gap:4px}.avg-live-grid strong{font-size:13px}}
+
+.usegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.use{border:1px solid var(--line);border-radius:8px;padding:8px}.use b{font-size:9px;display:block}.use strong{font-size:12px;display:block;margin:3px 0}.use p{font-size:8px;color:var(--muted);margin:0}
+@media(max-width:740px){main{padding:15px 10px 25px}.work{grid-template-columns:1fr}.stage{padding:7px}.stage b{font-size:10px}}
+@media(max-width:480px){h1{font-size:21px}.framework{grid-template-columns:1fr;gap:3px}.arrow{height:12px;transform:rotate(90deg)}.reasons{grid-template-columns:1fr}.matrix{grid-template-columns:52px 1fr 1fr;gap:3px}.cell{min-height:76px;padding:6px}.cell .n{font-size:20px}.usegrid{grid-template-columns:1fr 1fr}.tabs{gap:3px}.tab{padding:5px 3px}}
+</style></head><body><main>
+<header><div class="k">CLASSIFICATION METRICS · DECISION FRAMEWORK</div><h1>为什么需要这么多指标？每个指标究竟负责什么？</h1><p class="sub">不是指标越多越好，而是同一张混淆矩阵里，存在不同的业务问题、不同的分母和不同的错误代价。</p></header>
+
+<section class="panel"><div class="framework">
+<div class="stage"><small>① 定义任务</small><b><span style="color:var(--green)">Positive 正类</span> = 要识别的目标</b><p>钓鱼检测：钓鱼邮件</p><div class="rule"><b>Negative 负类</b> = 非目标：正常邮件</div></div><div class="arrow">→</div>
+<div class="stage"><small>② 得到四种结果</small><b>真实标签 × 模型预测</b><p>TP 抓对、FP 误报、FN 漏报、TN 放对。</p><div class="rule">同一批预测结果，是所有指标共同的原材料。</div></div><div class="arrow">→</div>
+<div class="stage"><small>③ 根据业务问题选指标</small><b>不同问题，观察不同区域</b><p>看报警质量、目标覆盖、整体表现或错误代价。</p><div class="rule">一个数字无法回答所有问题。</div></div></div></section>
+
+<section class="panel"><div class="head"><h2>为什么一个指标不够？四种结果的业务代价不同</h2><span class="hint">钓鱼邮件检测示例</span></div>
+<div class="reasons">
+<div class="reason fn"><div class="symbol">漏</div><div><b>FN · 漏掉钓鱼邮件</b><p>真实威胁未被抓到，可能导致账号失陷或数据泄漏。</p></div></div>
+<div class="reason fp"><div class="symbol">误</div><div><b>FP · 把正常邮件误报</b><p>产生无效告警，消耗 SOC 排查时间，也可能影响正常业务。</p></div></div>
+<div class="reason tp"><div class="symbol">抓</div><div><b>TP · 正确抓到钓鱼邮件</b><p>成功识别威胁，是检测系统希望增加的结果。</p></div></div>
+<div class="reason tn"><div class="symbol">放</div><div><b>TN · 正确放过正常邮件</b><p>避免误报、保持正常邮件流转，也是系统需要的能力。</p></div></div></div>
+<div class="rule"><b>关键：</b>最怕漏报，就不能只看总体准确率；SOC 人力有限，也不能只追求召回率。必须明确业务最在意哪种错误。</div>
+<div class="head" style="margin:12px 0 6px"><h2>先选业务目标，看看应该优先看什么</h2><span class="hint">点击切换</span></div>
+<div class="priority"><button class="active" data-priority="miss">最怕漏掉威胁</button><button data-priority="fp">最怕误报告警</button><button data-priority="both">误报与漏报都重要</button><button data-priority="imbalance">正负样本极不平衡</button><button data-priority="auc">比较不同阈值</button></div>
+<div class="advice" id="advice"><b>优先看 Recall。</b>它回答真实钓鱼邮件中，模型抓住了多少。同时看 Precision，避免告警量无法承受；需要平衡分数时再看 F1。</div></section>
+
+<div class="work"><section class="panel"><div class="head"><h2>同一张混淆矩阵</h2><span class="hint">修改数字，观察变化</span></div>
+<div class="matrix"><div class="axis">真实 ↓<br>预测 →</div><div class="axis">预测钓鱼<br>Positive</div><div class="axis">预测正常<br>Negative</div>
+<div class="axis">真实钓鱼<br>Positive</div><div class="cell tp" id="cellTP"><span class="code">TP · 抓对</span><span class="n" id="vTP">80</span><span class="desc">钓鱼，正确报警</span></div><div class="cell fn" id="cellFN"><span class="code">FN · 漏报</span><span class="n" id="vFN">20</span><span class="desc">钓鱼，却放过去</span></div>
+<div class="axis">真实正常<br>Negative</div><div class="cell fp" id="cellFP"><span class="code">FP · 误报</span><span class="n" id="vFP">20</span><span class="desc">正常，却被报警</span></div><div class="cell tn" id="cellTN"><span class="code">TN · 放对</span><span class="n" id="vTN">880</span><span class="desc">正常，正确放过</span></div></div>
+<div class="legend"><span><i class="dot" style="background:var(--green)"></i>TP</span><span><i class="dot" style="background:var(--red)"></i>FP</span><span><i class="dot" style="background:var(--amber)"></i>FN</span><span><i class="dot" style="background:var(--blue)"></i>TN</span><span>粗框=分母；内框=分子</span></div>
+<div class="inputs"><div class="ibox"><label>TP · 抓对</label><input id="tp" type="number" min="0" value="80"></div><div class="ibox"><label>FP · 误报</label><input id="fp" type="number" min="0" value="20"></div><div class="ibox"><label>FN · 漏报</label><input id="fn" type="number" min="0" value="20"></div><div class="ibox"><label>TN · 放对</label><input id="tn" type="number" min="0" value="880"></div></div>
+<div class="totals"><span>总样本 <b id="total">1,000</b></span><span>真实钓鱼 <b id="actual">100</b></span><span>模型报警 <b id="pred">100</b></span></div></section>
+
+<section class="panel"><div class="head"><h2>点击指标：看它观察哪一部分</h2><span class="hint">矩阵 + 集合图联动</span></div>
+<div class="tabs"><button class="tab active" data-metric="accuracy"><strong>Accuracy</strong><small>整体判断</small></button><button class="tab" data-metric="precision"><strong>Precision</strong><small>报警质量</small></button><button class="tab" data-metric="recall"><strong>Recall</strong><small>目标覆盖</small></button><button class="tab" data-metric="f1"><strong>F1</strong><small>综合平衡</small></button><button class="tab" data-metric="specificity"><strong>Specificity</strong><small>正常放过</small></button><button class="tab" data-metric="fpr"><strong>FPR</strong><small>正常误报</small></button><button class="tab" data-metric="balanced"><strong>Balanced Acc.</strong><small>两类平衡</small></button></div>
+<div class="metric"><div class="mtop"><h3 id="metricName">Accuracy · 准确率</h3><div class="score" id="score">96.0%</div></div><p class="question" id="question">所有邮件里，模型总共判断对了多少？</p><div class="formula" id="formula"><span class="numtxt">TP + TN</span> / <span class="dentxt">TP + FP + FN + TN</span></div><div class="fnote" id="formulaNote">分子：判断正确；分母：全部样本</div>
+<div class="range" id="range">分母范围：全部样本</div><div class="bar"><div class="piece tp" id="pieceTP">TP</div><div class="piece fp" id="pieceFP">FP</div><div class="piece fn" id="pieceFN">FN</div><div class="piece tn" id="pieceTN">TN</div></div>
+<div class="meaning" id="meaning">整体判断正确率。适合类别分布相对均衡、总体正确比例确实重要的情况。</div>
+<div class="venn"><b>正类集合：真实目标 A 与模型预测 B</b><small>示意图不按数量比例绘制；交集是 TP，A 独有是 FN，B 独有是 FP。</small>
+<svg viewBox="0 0 330 155" role="img" aria-label="真实正类集合与模型预测正类集合"><circle id="circleA" class="va" cx="130" cy="73" r="56"/><circle id="circleB" class="vb" cx="200" cy="73" r="56"/><g class="vl"><text x="91" y="75">FN</text><text x="165" y="75">TP</text><text x="239" y="75">FP</text></g><g class="vs"><text x="105" y="14">A：真实正类</text><text x="226" y="14">B：预测正类</text><text x="165" y="148">两圆之外：TN</text></g></svg><div class="vinfo" id="vinfo">Accuracy 还要考虑两圆之外的 TN，因此必须回到完整四格矩阵。</div></div>
+<div class="f1" id="f1">
+ <div class="f1-intro"><b>F1 为什么是调和平均？</b><br>先抓住它要解决的问题：Precision 和 Recall 必须同时表现好。不能让一个很高的分数，把另一个很低的分数“平均掉”。算术平均、几何平均、调和平均，都是综合两个数的方法，但对短板的处理力度不同。</div>
+
+ <div class="avg-example">
+  <div class="avg-example-head"><b>先看一个能拉开差距的例子</b><span>Precision = 100%　Recall = 10%</span></div>
+  <div class="avg-grid">
+   <div class="avg-card arith"><b>算术平均</b><div class="avg-value">55.0%</div><div class="avg-formula">(P + R) ÷ 2</div><div class="avg-bar"><span style="width:55%"></span></div><small>高分可以较多地补偿低分；容易掩盖短板。</small></div>
+   <div class="avg-card geo"><b>几何平均</b><div class="avg-value">31.6%</div><div class="avg-formula">√(P × R)</div><div class="avg-bar"><span style="width:31.6%"></span></div><small>看两者的乘积；其中一项低，乘积就会变小。</small></div>
+   <div class="avg-card harm"><b>调和平均</b><div class="avg-value">18.2%</div><div class="avg-formula">2 ÷ (1/P + 1/R)</div><div class="avg-bar"><span style="width:18.2%"></span></div><small>对低值最敏感；高分很难抵消低分。</small></div>
+  </div>
+  <div class="avg-explain">
+   <div><b>算术平均</b>把两个数直接相加，再除以 2。</div>
+   <div><b>几何平均</b>先相乘，再开平方；强调两项共同表现。</div>
+   <div><b>调和平均</b>先取倒数求平均，再取倒数；低值会产生更大的影响。</div>
+  </div>
+ </div>
+
+ <div class="avg-live">
+  <div class="avg-live-head">换成当前混淆矩阵的真实数值 <span>P = Precision　·　R = Recall</span></div>
+  <div class="avg-live-head" style="margin-top:3px;font-weight:500"><span>Precision：</span><strong id="f1p">80.0%</strong><span>Recall：</span><strong id="f1r">80.0%</strong></div>
+  <div class="avg-live-grid">
+   <div><small>算术平均</small><strong id="arithNow">80.0%</strong></div>
+   <div><small>几何平均</small><strong id="geoNow">80.0%</strong></div>
+   <div><small>调和平均 = F1</small><strong id="harmNow">80.0%</strong></div>
+  </div>
+  <p>你可以修改左边的 TP、FP、FN，观察这三个平均值如何变化。P 和 R 相等时，三种平均相同；差距越大，调和平均越容易被较低的一项拉低。</p>
+ </div>
+
+ <div class="harmonic-why">
+  <b>调和平均到底是什么？为什么要先取倒数？</b>
+  <p>调和平均不是普通地平均 P 和 R，而是先平均它们的倒数，再把结果倒回来。对两个数，它的定义是：</p>
+  <div class="derivation">
+   <div>① 两个数的调和平均：<strong>H = 2 ÷ (1/P + 1/R)</strong></div>
+   <div>② 分母通分：<strong>H = 2 ÷ ((P + R) / (P × R))</strong></div>
+   <div>③ 除以分数等于乘倒数：<strong>H = 2 × P × R ÷ (P + R)</strong></div>
+  </div>
+  <div class="speed-example">
+   <b>用平均速度理解“倒数平均”</b>
+   <p>去程 100 公里，以 100 km/h 行驶；返程同样 100 公里，以 10 km/h 行驶。总路程 200 公里，总时间 1 + 10 = 11 小时，所以平均速度是 200 ÷ 11 = <strong>18.18 km/h</strong>，不是 55 km/h。</p>
+   <p>因为两段路程相同，但慢速那一段花的时间更多。平均速度必须用“总路程 ÷ 总时间”，自然得到调和平均。调和平均因此特别适合体现慢的一项带来的限制。</p>
+  </div>
+ </div>
+
+ <div class="f1-final">
+  <strong>放回 F1：</strong>F1 选择调和平均，是为了让 Precision 和 Recall 权重对称，同时让较差的一项明显限制综合分数。它是一种评价设计选择，不是说所有任务都必须使用它。
+  <p>F1 = 2 × P × R ÷ (P + R) = 2TP ÷ (2TP + FP + FN)。TN 不参与，因为 F1 只综合正类的查准与查全。</p>
+  <p>当 P 或 R 为 0 时，F1 通常按 0 处理；如果两者都没有定义，实际评测库通常也会通过约定的 zero_division 规则返回 0 或其他指定值。</p>
+ </div>
+</div>
+</div></section></div>
+
+<section class="panel"><div class="head"><h2>什么时候看什么？</h2><span class="hint">业务目标 → 优先指标</span></div><div class="usegrid">
+<div class="use"><b style="color:var(--green)">报警质量优先</b><strong>Precision</strong><p>人工审核资源有限、误报处置成本高，关注告警是否可信。</p></div>
+<div class="use"><b style="color:var(--amber)">漏报风险优先</b><strong>Recall</strong><p>漏掉正类代价极高，例如安全威胁、疾病初筛。</p></div>
+<div class="use"><b style="color:var(--purple)">两者同等重要</b><strong>F1</strong><p>需要单一分数平衡 Precision 和 Recall，且不把 TN 当作正类检测成绩。</p></div>
+<div class="use"><b style="color:var(--blue)">整体正确率重要</b><strong>Accuracy</strong><p>类别比例相对均衡，且 FP 与 FN 代价接近。</p></div>
+<div class="use"><b style="color:var(--blue)">关注正常类</b><strong>Specificity / FPR</strong><p>看正常样本正确放过多少，或被错误报警多少。</p></div>
+<div class="use"><b style="color:var(--purple)">类别极不平衡</b><strong>Balanced Acc. / PR-AUC</strong><p>平衡准确率等权看两类；正类稀少时，PR-AUC 常更能体现正类检出质量。</p></div>
+</div><div class="rule"><b>补充：</b>混淆矩阵指标通常是在某个固定分类阈值下计算；ROC-AUC / PR-AUC 则观察不同阈值下的整体表现。最终上线仍要根据 FP、FN 的业务代价选择阈值。</div></section>
+</main>
+<script>
+const $=id=>document.getElementById(id),ids=['tp','fp','fn','tn'];let metric='accuracy';
+const C={
+accuracy:['Accuracy · 准确率','所有样本里，模型总共判断对了多少？','<span class="numtxt">TP + TN</span> / <span class="dentxt">TP + FP + FN + TN</span>','分子：判断正确；分母：全部样本',['tp','fp','fn','tn'],['tp','tn'],'分母范围：全部样本','整体判断正确率。适合类别分布相对均衡、总体正确比例确实重要的情况。','Accuracy 还要考虑两圆之外的 TN，因此必须回到完整四格矩阵。',''],
+precision:['Precision · 精确率（查准率）','模型报出来的钓鱼邮件中，有多少真的有问题？','<span class="numtxt">TP</span> / <span class="dentxt">TP + FP</span>','分子：报对；分母：所有模型正类预测',['tp','fp'],['tp'],'分母范围：模型预测为正类','报警可信度。适合人工审核能力有限、误报成本高的场景。','Precision = 交集 TP ÷ 预测集合 B。模型报出来的，有多少是真的？','b'],
+recall:['Recall · 召回率（查全率）','真实存在的钓鱼邮件中，有多少被模型抓住？','<span class="numtxt">TP</span> / <span class="dentxt">TP + FN</span>','分子：抓住；分母：所有真实正类',['tp','fn'],['tp'],'分母范围：真实正类','目标覆盖率。适合漏掉正类代价很高的安全检测、初筛等场景。','Recall = 交集 TP ÷ 真实集合 A。真实目标中，有多少被找到了？','a'],
+f1:['F1 Score · F1 分数','Precision 和 Recall 是否同时做得好？','<span class="numtxt">2 × P × R</span> / <span class="dentxt">P + R</span>','P = Precision；R = Recall；调和平均',['tp','fp','fn'],['tp'],'F1 使用 TP、FP、FN；不使用 TN','综合报警质量与目标覆盖。适合两者同等重要、需要单一平衡分数的场景。','F1 = 2TP ÷ (真实集合 A 大小 + 预测集合 B 大小)，也就是 Dice 重叠度。','both'],
+specificity:['Specificity · 特异度','真实正常邮件中，有多少被正确放过？','<span class="numtxt">TN</span> / <span class="dentxt">TN + FP</span>','分子：放对；分母：所有真实负类',['fp','tn'],['tn'],'分母范围：真实负类','正常类识别能力。适合需要确认正常样本不会被大量误拦的场景。','Specificity 关注真实负类这一行，属于正类集合图的补集区域。',''],
+fpr:['FPR · 假正例率（误报率）','真实正常邮件中，有多少被错误报警？','<span class="numtxt">FP</span> / <span class="dentxt">FP + TN</span>','分子：误报；分母：所有真实负类',['fp','tn'],['fp'],'分母范围：真实负类','正常类误报风险。适合监控误报对正常流量的干扰；FPR = 1 − Specificity。','FPR 与 Specificity 共用真实负类分母：一个看误报，一个看正确放过。',''],
+balanced:['Balanced Accuracy · 平衡准确率','正类和负类的识别能力，平均起来怎么样？','<span class="numtxt">Recall + Specificity</span> / <span class="dentxt">2</span>','先分别计算正类召回和负类特异度，再等权平均',['tp','fp','fn','tn'],[],'它是两个类别召回能力的平均','类别不平衡时，让正类和负类获得同等权重，避免多数类主导 Accuracy。','它同时看真实正类 A 和真实负类的覆盖率，需看完整混淆矩阵。','']
+};
+function d(a,b){return b===0?NaN:a/b}function pct(x){return Number.isFinite(x)?(x*100).toFixed(1)+'%':'—'}
+function choose(m){metric=m;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.metric===m));update()}
+function update(){
+ const [tp,fp,fn,tn]=ids.map(id=>Math.max(0,Math.floor(Number($(id).value)||0))),total=tp+fp+fn+tn;
+ const p=d(tp,tp+fp),r=d(tp,tp+fn),sp=d(tn,tn+fp),fpr=d(fp,fp+tn),f1=d(2*tp,2*tp+fp+fn),acc=d(tp+tn,total),bal=(r+sp)/2;
+ const values={accuracy:acc,precision:p,recall:r,f1,specificity:sp,fpr,balanced:bal};
+ $('total').textContent=total.toLocaleString();$('actual').textContent=(tp+fn).toLocaleString();$('pred').textContent=(tp+fp).toLocaleString();
+ ['TP','FP','FN','TN'].forEach((k,i)=>$('v'+k).textContent=[tp,fp,fn,tn][i].toLocaleString());
+ const c=C[metric],v={tp,fp,fn,tn};$('metricName').textContent=c[0];$('score').textContent=pct(values[metric]);$('question').textContent=c[1];$('formula').innerHTML=c[2];$('formulaNote').textContent=c[3];$('range').textContent=c[6];$('meaning').textContent=c[7];$('vinfo').textContent=c[8];
+ const den=metric==='f1'?2*tp+fp+fn:c[4].reduce((s,k)=>s+v[k],0);
+ ['tp','fp','fn','tn'].forEach(k=>{const cell=$('cell'+k.toUpperCase()),piece=$('piece'+k.toUpperCase());cell.classList.remove('den','num','dim');if(c[4].includes(k))cell.classList.add('den');else cell.classList.add('dim');if(c[5].includes(k))cell.classList.add('num');const n=v[k],weight=(metric==='f1'&&k==='tp')?2*n:n;piece.classList.toggle('hide',!c[4].includes(k)||weight===0||den===0);piece.style.width=(c[4].includes(k)&&den?weight/den*100:0)+'%';piece.textContent=(metric==='f1'&&k==='tp'?'2TP ':'')+weight;});
+ $('circleA').classList.remove('focus','faded');$('circleB').classList.remove('focus','faded');if(c[9]==='a'){$('circleA').classList.add('focus');$('circleB').classList.add('faded')}if(c[9]==='b'){$('circleB').classList.add('focus');$('circleA').classList.add('faded')}if(c[9]==='both'){$('circleA').classList.add('focus');$('circleB').classList.add('focus')}
+ $('f1').classList.toggle('show',metric==='f1');
+ $('f1p').textContent=pct(p);$('f1r').textContent=pct(r);
+ const arithmetic=(p+r)/2,geometric=Math.sqrt(p*r),harmonic=(p+r)>0?2*p*r/(p+r):NaN;
+ $('arithNow').textContent=pct(arithmetic);$('geoNow').textContent=pct(geometric);$('harmNow').textContent=pct(harmonic);
+}
+ids.forEach(id=>$(id).addEventListener('input',update));document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.metric)));
+const priorities={
+miss:'<b>优先看 Recall。</b>它回答真实钓鱼邮件中，模型抓住了多少。同时看 Precision，避免告警量无法承受；需要平衡分数时再看 F1。',
+fp:'<b>优先看 Precision 和 FPR。</b>Precision 看报警中有多少是真的；FPR 看正常邮件中有多少被误报。同时观察 Recall，防止模型过度保守而漏掉威胁。',
+both:'<b>优先看 F1。</b>它平衡 Precision 与 Recall。但仍要同时报告这两个原始指标，因为相同 F1 可能对应不同的误报 / 漏报结构。',
+imbalance:'<b>不要只看 Accuracy。</b>同时看正类 Recall、负类 Specificity 或 Balanced Accuracy；正类非常稀少时，再重点观察 PR-AUC。',
+auc:'<b>看 ROC-AUC / PR-AUC，并结合业务阈值下的 Precision、Recall。</b>AUC 比较不同阈值下的区分能力；上线阈值仍需根据 FP、FN 的业务代价选择。'
+};
+document.querySelectorAll('[data-priority]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-priority]').forEach(x=>x.classList.toggle('active',x===b));$('advice').innerHTML=priorities[b.dataset.priority]}));
+update();
+</script></body></html>

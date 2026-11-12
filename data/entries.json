@@ -1,0 +1,60 @@
+{
+  "categories": [
+    {
+      "id": "ai",
+      "name": "人工智能"
+    },
+    {
+      "id": "algorithms",
+      "name": "基础算法"
+    },
+    {
+      "id": "engineering",
+      "name": "工程实践"
+    },
+    {
+      "id": "math",
+      "name": "数学基础"
+    },
+    {
+      "id": "tools",
+      "name": "工具与环境"
+    }
+  ],
+  "entries": [
+    {
+      "id": "classification-metrics",
+      "title": "分类指标：从一张图看懂它们在衡量什么",
+      "description": "从一张混淆矩阵出发，理解 Accuracy、Precision、Recall 与 F1。试着调整数字，看见每个指标背后的观察角度。",
+      "category": "ai",
+      "tags": [
+        "混淆矩阵",
+        "Precision",
+        "Recall",
+        "F1"
+      ],
+      "type": "交互演示",
+      "path": "content/ai/classification_metrics_why_each_fixed.html",
+      "cover": "assets/images/classification-metrics.svg",
+      "addedAt": "2026-11-12",
+      "featured": true
+    },
+    {
+      "id": "bias-variance-mse-gepa",
+      "title": "一条评测链，串起 Bias、Variance、MSE 与 GEPA",
+      "description": "从真实能力出发，沿着测量、选择与独立复测理解误差。用可手算的例子和交互实验，解释为什么选出的高分不一定能复现。",
+      "category": "ai",
+      "tags": [
+        "Bias",
+        "Variance",
+        "MSE",
+        "Winner’s Curse",
+        "GEPA"
+      ],
+      "type": "交互讲解",
+      "path": "content/ai/bias_variance_mse_gepa_guide_derivation_expanded.html",
+      "addedAt": "2026-11-12",
+      "featured": true
+    }
+  ]
+}

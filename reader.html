@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#edf5fc" />
+    <meta name="description" content="在晴空图书室阅读独立交互式知识手记。" />
+    <meta name="robots" content="noindex" />
+    <title>阅读手记 · 晴空图书室</title>
+    <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/css/site.css" />
+    <script type="module" src="assets/js/reader.js"></script>
+  </head>
+  <body class="reader-page">
+    <a class="skip-link" href="#article-frame">跳到文章内容</a>
+    <header class="reader-header">
+      <a class="brand" href="./"
+        ><img
+          src="assets/images/favicon.svg"
+          width="32"
+          height="32"
+          alt=""
+        /><span>晴空图书室<small>THE READING ROOM</small></span></a
+      ><a class="back-link" href="./#library">← 返回知识库</a>
+    </header>
+    <main class="reader-main">
+      <div class="reader-intro">
+        <nav class="breadcrumbs" aria-label="当前位置">
+          <a href="./#library">知识库</a><span aria-hidden="true">/</span
+          ><a id="reader-category" href="./#library">手记</a>
+        </nav>
+        <h1 id="reader-title">正在翻开手记…</h1>
+        <p id="reader-description">给好奇心一点安静的时间。</p>
+      </div>
+      <section
+        id="reader-content"
+        class="reader-content"
+        hidden
+        aria-label="文章阅读区"
+      >
+        <div class="reader-toolbar">
+          <span id="reader-status" role="status">正在加载文章…</span>
+          <div>
+            <button
+              id="focus-toggle"
+              class="button small secondary"
+              type="button"
+              aria-pressed="false"
+            >
+              展开阅读</button
+            ><a
+              id="original-link"
+              class="button small primary"
+              target="_blank"
+              rel="noopener noreferrer"
+              >打开原页 ↗</a
+            >
+          </div>
+        </div>
+        <iframe
+          id="article-frame"
+          title="知识手记内容"
+          allow="fullscreen"
+          hidden
+        ></iframe>
+      </section>
+      <section id="reader-error" class="panel empty-state" hidden>
+        <span class="empty-icon" aria-hidden="true">⌕</span>
+        <h2>这篇手记暂时找不到</h2>
+        <p id="reader-error-message">
+          链接可能不完整，请返回知识库重新选择文章。
+        </p>
+        <a class="button primary" href="./#library">返回知识库</a>
+      </section>
+      <noscript
+        ><div class="panel empty-state">
+          <p>站内阅读需要 JavaScript。你也可以直接打开现有文章。</p>
+          <a href="content/ai/classification_metrics_why_each_fixed.html"
+            >分类指标可视化 ↗</a
+          >
+        </div></noscript
+      >
+      <p class="reader-tip">
+        交互图表可在文章内直接操作。需要更宽的画布时，试试「打开原页」。
+      </p>
+    </main>
+  </body>
+</html>

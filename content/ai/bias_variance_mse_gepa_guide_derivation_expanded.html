@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="沿着真实能力、测量、选择、独立复测的一条评测链，理解 Bias、Variance、MSE、赢家诅咒与 GEPA。">
+<title>一条评测链，串起 Bias、Variance、MSE 与 GEPA</title>
+<style>
+/* 自包含知识页：双击文件也能阅读和操作实验，不依赖外部脚本。 */
+:root{--bg:#f1f5fa;--paper:#fff;--ink:#24394f;--muted:#5e7187;--line:#dae4ee;--blue:#306cb2;--blue-bg:#edf4fd;--green:#16775c;--green-bg:#edf8f2;--amber:#936015;--amber-bg:#fff7e8;--red:#b54d50;--red-bg:#fff1f0}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.85 "PingFang SC","Microsoft YaHei",sans-serif}.wrap{max-width:1080px;padding:26px 24px 60px;margin:auto}header{background:#213f61;color:#fff;padding:32px;border-radius:18px}.kicker{font-size:11px;letter-spacing:2px;color:#bad4ed}h1{font-size:30px;line-height:1.45;margin:10px 0 15px}header p{color:#e0ebf6;margin:0;max-width:850px}.header-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.header-tags span{font-size:12px;border:1px solid #6683a4;border-radius:20px;padding:2px 11px}nav{display:flex;flex-wrap:wrap;gap:8px;padding:17px 0}a{color:var(--blue);text-underline-offset:4px}nav a{background:white;border:1px solid var(--line);padding:5px 12px;border-radius:20px;font-size:13px;text-decoration:none}section{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:26px 28px;margin:0 0 22px;scroll-margin-top:20px}h2{font-size:23px;line-height:1.5;margin:0 0 16px}h3{font-size:18px;line-height:1.6;margin:23px 0 9px}p{margin:10px 0}ul,ol{padding-left:24px}.lead{font-size:18px}.small{font-size:13px;color:var(--muted)}.location{display:inline-block;font-size:12px;color:var(--blue);background:var(--blue-bg);border-radius:5px;padding:3px 10px;margin-bottom:12px}.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}.flow a,.flow>div{display:block;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:14px;background:#f8fbff;color:var(--ink)}.flow b{display:block;font-size:17px;margin:5px 0}.flow small{font-size:12px;color:var(--blue)}.flow p{font-size:13px;color:var(--muted);line-height:1.7;margin:6px 0 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}.card h3{margin:0 0 8px}.tint-blue{background:var(--blue-bg)}.tint-green{background:var(--green-bg)}.tint-amber{background:var(--amber-bg)}.tint-red{background:var(--red-bg)}.formula{border:1px solid #dce6f2;background:#f5f8fc;border-radius:10px;padding:15px 18px;text-align:center;font:600 20px/1.8 Georgia,"Times New Roman",serif;margin:16px 0;overflow-wrap:anywhere}.formula small{display:block;font:13px/1.7 "PingFang SC","Microsoft YaHei",sans-serif;color:var(--muted);margin-top:5px}.callout{padding:14px 17px;border-left:4px solid var(--blue);background:var(--blue-bg);border-radius:0 10px 10px 0;margin:17px 0}.warn{border-color:var(--amber);background:var(--amber-bg)}.good{border-color:var(--green);background:var(--green-bg)}.bridge{color:#355c83;padding-top:15px;border-top:1px dashed #cbdbea;margin-top:24px}.table-wrap{overflow:auto;max-width:100%;margin:15px 0}table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{background:#f2f6fb}.winner-row{background:var(--amber-bg)}.number{font-variant-numeric:tabular-nums;white-space:nowrap}.positive{color:var(--red)}.target{color:var(--green)}details{border:1px solid var(--line);border-radius:10px;padding:15px 18px;margin-top:18px}summary{cursor:pointer;font-weight:650;color:#315e88;line-height:1.65}details[open]>summary{padding-bottom:10px}details p{font-size:15px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:17px 0}.control{border:1px solid var(--line);border-radius:10px;padding:16px}.control label{display:flex;justify-content:space-between;gap:12px;font-weight:600;font-size:14px}.control input{width:100%;accent-color:var(--blue);margin:14px 0 4px}.control small{font-size:12px;color:var(--muted);display:block}.presets{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}button{font:inherit;cursor:pointer;color:var(--blue);background:var(--blue-bg);border:1px solid #c8d9ee;border-radius:8px;padding:8px 13px;font-size:13px}button:hover{background:#deebfb}button.active{background:var(--blue);color:white}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid #d99832;outline-offset:4px}.metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}.metric{padding:15px;background:#f5f8fc;border:1px solid var(--line);border-radius:10px}.metric span{display:block;font-size:12px;line-height:1.6;color:var(--muted)}.metric strong{display:block;font-size:25px;line-height:1.6;font-variant-numeric:tabular-nums}.metric.selected{background:var(--amber-bg)}.metric.fresh{background:var(--green-bg)}.round-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.round-head h3{margin:0}.round-result{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.round-result>div{padding:14px;border-radius:8px;background:#f3f7fc}.round-result strong{display:block;font-size:23px}.comparison{display:grid;gap:12px;margin:15px 0}.comparison-row{display:grid;grid-template-columns:170px 1fr 70px;align-items:center;gap:12px;font-size:13px}.bar-track{height:14px;background:#e9eff5;border-radius:8px;overflow:hidden}.bar-fill{height:100%;background:var(--blue);border-radius:8px}.bar-fill.green{background:var(--green)}.bar-fill.amber{background:#bd8a35}.answer{font-size:15px}.footer{text-align:center;font-size:12px;color:var(--muted);padding:10px}.back-top{font-size:12px;display:block;text-align:right;margin-top:14px}.source-list{font-size:13px;color:var(--muted)}[hidden]{display:none!important}@media(max-width:720px){.wrap{padding:12px 10px 35px}header{padding:24px 19px}h1{font-size:24px}section{padding:22px 17px}h2{font-size:21px}.flow,.grid3,.metric-row{grid-template-columns:1fr 1fr}.grid,.controls,.round-result{grid-template-columns:1fr}.formula{font-size:18px;padding:13px 10px}.comparison-row{grid-template-columns:115px 1fr 55px;gap:8px;font-size:12px}.round-head{align-items:flex-start}.round-head h3{font-size:16px}body{font-size:15px}.lead{font-size:16px}.flow{gap:8px}.flow a,.flow>div{padding:11px}.metric{padding:12px}.metric strong{font-size:23px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}@media print{body{background:white}.wrap{max-width:none;padding:0}header{background:white;color:var(--ink);border:1px solid var(--line)}header p,.kicker{color:var(--muted)}nav,.presets,button,.back-top{display:none}section{break-inside:auto}.card,.formula,.flow{break-inside:avoid}}
+</style>
+</head>
+<body><main class="wrap">
+<header id="top">
+<div class="kicker">ONE EVALUATION PIPELINE · 一条评测链</div>
+<h1>为什么选出来的高分，<br>不一定是能复现的能力？</h1>
+<p>先看完整过程，再拆开每一步：我们想知道真实能力，却只能看到一次测量；我们又用这些测量来挑赢家。Bias、Variance、MSE 和 Winner's Curse，都是在描述这条链上的不同问题。</p>
+<div class="header-tags"><span>一个贯穿例子</span><span>先框架，后推导</span><span>测量 → 选择 → 复测</span><span>最后映射到 GEPA</span></div>
+</header>
+<nav aria-label="文章导航"><a href="#framework">先看整张地图</a><a href="#model">从 Prompt 评测理解 Bias</a><a href="#mse">反复测：Bias / Variance / MSE</a><a href="#selection">选赢家：误差怎么变了</a><a href="#sim">把整条链跑一遍</a><a href="#gepa">映射到 GEPA</a><a href="#recap">检查理解</a></nav>
+
+<section id="framework">
+<span class="location">总览 · 后文始终沿着这四步走</span>
+<h2>00｜先看整体：我们到底想判断什么？</h2>
+<p class="lead">假设你有几版 Prompt，想选出以后处理真实任务时表现最好的一版。你不能只问“谁这次分数最高”，还要问“这个高分里，有多少是真能力，有多少是测量误差”。</p>
+<div class="flow" aria-label="评测过程的四个阶段">
+<a href="#model"><small>① 目标</small><b>真实能力是多少？</b><p>确定目标任务和评分标准。真实能力记作 J。</p></a>
+<a href="#mse"><small>② 测量</small><b>这次测得准不准？</b><p>用有限题目打分。偏差看中心，方差看波动，MSE 看总误差。</p></a>
+<a href="#selection"><small>③ 选择</small><b>为什么选中了它？</b><p>用带噪声的分数挑赢家，可能连正向噪声一起挑中。</p></a>
+<a href="#gepa"><small>④ 复测</small><b>高分能否复现？</b><p>冻结赢家，用未参与选择的新题检查它。</p></a>
+</div>
+<div class="callout"><strong>全文要连起来的因果关系：</strong>测量存在波动 → 选择操作偏爱偶然高分 → 搜索中的冠军分可能偏乐观 → 需要独立复测。<br>同时，若评分尺本身有固定偏移，换一批题也不会自动修好它。</div>
+<div class="table-wrap"><table><thead><tr><th>概念</th><th>放在框架哪里？</th><th>它回答的问题</th></tr></thead><tbody>
+<tr><td>Bias 偏差</td><td>② 固定一个对象，反复测</td><td>长期平均有没有偏离真值？</td></tr>
+<tr><td>Variance 方差</td><td>② 固定一个对象，反复测</td><td>每次结果围绕自身均值波动多大？</td></tr>
+<tr><td>MSE 均方误差</td><td>② 汇总测量质量</td><td>相对真值的平方误差平均多大？</td></tr>
+<tr><td>Winner's Curse 赢家诅咒</td><td>③ 用测量结果做选择</td><td>选中以后，保留下来的噪声还平均为零吗？</td></tr>
+<tr><td>独立复测</td><td>④ 检查被选中的对象</td><td>不再沿用被挑中的那次好运，分数会怎样？</td></tr>
+</tbody></table></div>
+<p><strong>贯穿例子：</strong>先假设每版 Prompt 的真实能力都是 80 分。这个设定故意排除了能力差异，让我们只观察“测量和选择”本身造成了什么。最后再讨论真实 GEPA 中能力会改变的情况。</p>
+<p class="bridge">接下来先不选赢家。固定 Prompt A，先分清目标任务上的“真实能力”和一批题测出的“估计值”。</p>
+</section>
+
+<section id="model">
+<span class="location">① 目标 → ② 测量</span>
+<h2>01｜Bias 到底是什么？固定同一个 Prompt 来看</h2>
+<p class="lead"><strong>Bias 描述的是：固定一种评测方法，它在所有可能的评测结果下，平均会偏离真实能力多少。</strong>这里有两个不同的平均：目标任务上的真实平均表现，以及反复运行评测方法所得估计值的平均。</p>
+
+<h3>① 真实能力 80，是我们要估计的目标</h3>
+<p>固定 Prompt A、模型版本和运行配置。先用一个能算清答案的简化场景：目标任务分为三类，各占 1/3；A 按目标标准在这三类任务上的得分分别固定为 <strong>77、80、83</strong>。</p>
+<div class="formula">真实能力 J = (77 + 80 + 83) / 3 = 80</div>
+<p><strong>如果完整覆盖这三类任务，按目标比例、用正确标准计算，结果就是 80。</strong>这个例子公开真值，是为了检查评测方法。实际中，我们通常无法评测所有未来任务，才需要抽一批题，用样本平均分估计 J。</p>
+
+<h3>② 一小批题测到 82，只能说明本次误差是 +2</h3>
+<p>每轮从目标分布中独立抽 n = 3 道题，每道题属于三类任务的概率均为 1/3。假如这一轮有两道题来自 A 得 83 分的任务类别，一道来自得 80 分的类别：</p>
+<div class="formula">本轮估计值 Ĵ = (83 + 83 + 80) / 3 = 82<br>本次误差 = Ĵ − J = 82 − 80 = +2</div>
+<p>这个 +2 可能只是这批题恰好更适合 A。下一批题可能更多来自得 77 分的类别。<strong>单次误差不等于 Bias。</strong>随机抽三道题不代表完整覆盖三类任务，也不保证它们恰好各占 1/3。</p>
+
+<h3>③ 反复小样本测试后平均为 82，是否就有 Bias？</h3>
+<p>保持 Prompt 和评测规则不变，每轮重新独立抽三道题。做 R 轮，就得到 R 个估计值。将它们再平均，是<strong>有限次实验的平均</strong>。</p>
+<div class="formula">有限次平均 = (Ĵ₁ + Ĵ₂ + … + Ĵ<sub>R</sub>) / R<small>n 是每轮测多少道题；R 是整套评测重复多少轮。它们不是同一个数量。</small></div>
+<p>例如连续三轮都碰巧得到 82，三轮平均也会是 82。它仍然可能是随机波动，<strong>不能据此断言这个方法的 Bias 就是 2。</strong>已知真值时，有限次平均可以用来估计偏差，但这个偏差估计本身也有不确定性。</p>
+<p>Bias 定义里的 <strong>E[Ĵ]</strong> 是<strong>期望</strong>：把这个方法所有可能产生的估计值，按各自发生的概率加权平均。在这里，独立重复的轮数越来越多，有限次平均会趋近这个期望；不是每增加一轮都更接近，也不要求在某个有限轮数时恰好相等。</p>
+<div class="table-wrap"><table><thead><tr><th>量</th><th>平均的是谁？</th><th>在这个例子里</th></tr></thead><tbody>
+<tr><td>真实能力 J</td><td>A 在目标任务上的得分，按目标分布加权</td><td>确定为 80</td></tr>
+<tr><td>一次估计 Ĵ</td><td>这一批评测题上的得分</td><td>可能是 82，也可能是别的值</td></tr>
+<tr><td>有限次实验平均</td><td>实际做过的 R 轮估计值</td><td>仍然随机，可能是 82</td></tr>
+<tr><td>期望 E[Ĵ]</td><td>所有可能的估计值，按发生概率加权</td><td>由目标和评测方法决定；理想抽样求均值时为 80</td></tr>
+</tbody></table></div>
+
+<h3>④ 为什么理想的小样本评测也可以无偏？</h3>
+<p>用 X 表示 A 在随机一道目标任务上的得分。三类任务等可能，所以 E[X] = (77 + 80 + 83) / 3 = 80。每轮按相同分布抽 n 道题，按正确标准评分并直接求平均，则：</p>
+<div class="formula">E[Ĵ] = E[(X₁ + … + X<sub>n</sub>) / n]<br>= (E[X₁] + … + E[X<sub>n</sub>]) / n = 80<br>Bias = E[Ĵ] − J = 80 − 80 = 0</div>
+<p><strong>即使每轮只测一道题，这个估计方法也无偏。</strong>小样本使分数更容易忽高忽低，但在这里不会让它长期偏高。无偏不代表每次准确；本次得分离 80 很远，也不代表方法有偏。</p>
+
+<h3>⑤ 长期中心为什么会是 82？必须指出评测偏移的机制</h3>
+<p>继续固定 A，并按相同的目标分布抽题。现在换成一个存在系统偏移的 Judge：<strong>它对每道答案的评分，都比目标标准高 2 分。</strong>评测报告使用这些 Judge 分数的平均值，想估计的目标仍是原标准下的能力 80。</p>
+<div class="formula">Judge 给出的平均分 = 目标标准下的样本平均分 + 2<br>E[Judge 给出的平均分] = 80 + 2 = 82<br>Bias = 82 − 80 = +2</div>
+<p>长期中心为 82 的原因现在明确了：Judge 相对目标标准系统性多给分。另一种偏移机制是评测集过多包含 A 擅长的任务，却仍直接求平均、没有按目标任务比例校正。</p>
+<div class="callout warn"><strong>“全量评测完，不就应该是 80 吗？”</strong>在这个得分固定的例子里，完整覆盖目标任务并按正确标准、正确比例汇总，确实是 80。如果覆盖完整，但仍用每题多给 2 分的 Judge，报告就会是 82。目标能力没有改变，改变的是测量它的方法。</div>
+<p><strong>Bias 属于“目标 + 抽样规则 + 评分与汇总规则”这套估计流程。</strong>重复实验是理解和检查它的一种方式，不是重复到某个次数后才产生 Bias；若概率模型已知，也可以直接计算期望。这里的“多给 2 分”是为说明原因而设定的例子，不是断言实际 Judge 一定如此。</p>
+
+<h3>⑥ 把这些区别放回同一个得分公式</h3>
+<p>真实评测中，<strong>J</strong> 是固定 Prompt、模型和运行配置，在目标任务分布上的期望得分；<strong>Ĵ</strong> 是这轮有限题目得到的估计值。模型生成也可能随机，有限题库也可能不代表未来任务，因此现实中的“测完当前题库”不一定等于知道真实能力 J。</p>
+<p>记 μ = E[Ĵ]，则 b = μ − J 是 Bias，ε = Ĵ − μ 是本轮相对方法自身中心的波动：</p>
+<div class="formula">观测分 = 真实能力 + 长期偏移 + 本次随机波动<br>Ĵ = J + b + ε</div>
+<div class="grid3">
+<div class="card tint-green"><h3>J：我们想知道的量</h3><p>例如真实能力是 80。对固定的 Prompt 和目标任务分布，J 是固定值。</p></div>
+<div class="card tint-red"><h3>b：长期偏移</h3><p>例如评分者长期多给 5 分。即使题目足够多，平均分也会靠近 85。</p></div>
+<div class="card tint-blue"><h3>ε：这次的随机波动</h3><p>这批题刚好更擅长，或这次生成更顺利，可能额外高出 3 分；下次也可能偏低。</p></div>
+</div>
+<p>例如这次测到 88 分，可以拆为 <strong>80 + 5 + 3</strong>。但在真实评测中，你通常只看得到 88，看不到这三个分量。本文用已知真值的例子，是为了看清机制。</p>
+<details><summary>为什么可以这样拆？b 和 ε 分别如何定义？</summary>
+<p>固定同一个 Prompt，反复重新抽取评测数据，并重做具有随机性的生成、评分过程。把所得 Ĵ 的长期平均记为 μ = E[Ĵ]。</p>
+<div class="formula">b = μ − J，　ε = Ĵ − μ<br>因此 Ĵ = J + b + ε，且 E[ε] = 0</div>
+<p>这里 E[·] 是对“整套评测过程的重复”取平均。b 是固定估计流程的偏差；ε 围绕该流程自己的长期平均上下波动。这是一个分解定义，不要求噪声一定服从正态分布。</p>
+<p>若题目确实独立来自目标分布，而且评测奖励就是我们定义 J 时使用的目标奖励，样本均值是无偏的，b = 0。讨论数据分布不匹配或 Judge 固定偏移时，实际测量流程已不完全等同于理想目标流程。</p>
+</details>
+<p class="bridge">下一节沿用“Judge 每题多给 2 分”这个明确机制，逐项算出固定 Prompt A 的 Bias、Variance 和 MSE。</p>
+</section>
+
+<section id="mse">
+<span class="location">② 测量 · 暂时固定 Prompt A，不做选择</span>
+<h2>02｜反复测同一个 A：三个量看同一组结果</h2>
+<p>为了列出全部可能性，将上一节简化为<strong>每轮只测一道题</strong>，三类目标任务仍各以 1/3 的概率出现。按目标标准，A 的得分为 77、80、83，期望为 80。现在改用每题多给 2 分的 Judge：</p>
+<div class="table-wrap"><table><thead><tr><th>目标标准下的得分</th><th>Judge 报告分：目标得分 + 2</th><th>发生概率</th></tr></thead><tbody><tr><td>77</td><td>79</td><td>1/3</td></tr><tr><td>80</td><td>82</td><td>1/3</td></tr><tr><td>83</td><td>85</td><td>1/3</td></tr></tbody></table></div>
+<p><strong>因此 79、82、85 是这个方法所有可能的输出，不是碰巧测了三次的记录。</strong>按概率加权后的期望是 82，目标真值仍是 80。这就是同一个 Prompt A、同一套目标任务，由评分标准的偏移产生 Bias 的具体过程。</p>
+<div class="grid3">
+<div class="card tint-red" id="bias"><h3>Bias：方法的期望偏了多少？</h3><p>固定多加 2，使期望从 80 移到 82；目标真值仍为 80。</p><div class="formula">Bias = 82 − 80 = 2</div><p class="small">单位是“分”。每轮报告值都比该题的目标得分多 2，但相对总体真值的本次误差未必是 2。</p></div>
+<div class="card tint-blue" id="variance"><h3>Variance：围绕中心多散？</h3><p>相对自身均值 82，偏离为 −3、0、+3。</p><div class="formula">Variance = (9 + 0 + 9) / 3 = 6</div><p class="small">单位是“分²”。方差参照的是 82，不是 80。</p></div>
+<div class="card tint-green"><h3>MSE：离真值有多远？</h3><p>相对真值 80，误差为 −1、+2、+5。</p><div class="formula">MSE = (1 + 4 + 25) / 3 = 10</div><p class="small">单位也是“分²”。平方防止正负误差抵消。</p></div>
+</div>
+<div class="formula">MSE = Bias² + Variance = 2² + 6 = 10<small>同一组测量结果：先看长期中心，再看围绕中心的波动，就能解释总平方误差。</small></div>
+<div class="callout"><strong>把三个概念放回同一个式子：</strong>Ĵ − J = b + ε。Bias 描述 b；Variance 描述 ε 的大小；MSE 描述两者合起来造成的平方误差。<strong>MSE 是汇总量，不是第三种误差来源。</strong></div>
+<details><summary>逐步推导：为什么交叉项会消失？</summary>
+<ol>
+<li><strong>先明确对象。</strong>此处 Prompt 固定，所以真值 J 固定。μ = E[Ĵ] 也固定，只有本次测量 Ĵ 随数据变化。</li>
+<li><strong>加减同一个 μ，把误差拆开。</strong><div class="formula">Ĵ − J = (Ĵ − μ) + (μ − J) = ε + b</div>前半段是这次相对自身均值的波动，后半段是均值相对真值的偏移。</li>
+<li><strong>平方，保留交叉项。</strong><div class="formula">(Ĵ − J)² = ε² + 2bε + b²</div></li>
+<li><strong>对重复评测取期望。</strong><div class="formula">E[(Ĵ − J)²] = E[ε²] + 2bE[ε] + b²</div>b 是常数，可以提出期望；E[ε] = E[Ĵ − μ] = μ − μ = 0。</li>
+<li><strong>认出剩下的两项。</strong><div class="formula">MSE = E[ε²] + b² = Var(Ĵ) + Bias²</div>这是有限二阶矩下、固定目标估计的恒等式。没有假设每次 ε 都等于零。</li>
+</ol>
+<p class="small">上例把三个等概率结果当作完整的教学分布，所以方差除以 3。用有限样本估计未知总体方差时常见的 n−1 分母，是另一个问题。RMSE = √MSE，用来把平方单位还原成“分”。本文也不是在推导预测新标签时含有不可约噪声项的那一套预测误差分解。</p>
+</details>
+<h3>样本量 n 为什么出现在下一步实验里？</h3>
+<p>如果每道题得分的标准差为 σ，n 道题的得分独立同分布，则样本平均分的方差和标准误差分别是：</p>
+<div class="formula">Var(Ĵ) = σ² / n，　SE = σ / √n<small>SE 是平均分估计值的标准差，单位为“分”。它不是单道题得分的标准差 σ。</small></div>
+<p>例如 σ = 20：测 25 道题时 SE = 4；测 100 道题时 SE = 2。增加题目主要让 ε 变小，<strong>不会自动让 b 变小</strong>。如果 Judge 长期多给 5 分，多测题只会更稳定地得到偏高分数。</p>
+<p class="small">σ²/n 适用于这里的独立同分布抽样。从有限题库中不放回抽题时，方差需要有限总体修正；若目标就是该题库的平均分，每道题得分固定，测完全部题并准确求平均后，抽样方差就是零。重复题、相关任务、复杂抽样或共享随机因素也会改变方差；重复运行相同题目不能等同于增加同等数量的新题。</p>
+<p class="bridge"><strong>现在切换观察对象：</strong>下一节先去掉固定加分，让每个候选的测量都无偏，再每轮比较 A、B、C、只记录赢家。我们要检查：即使单个候选没有 Bias，“按最高分挑一个”这条新规则会不会产生 Bias？</p>
+</section>
+
+<section id="selection">
+<span class="location">③ 选择 · 从“固定 A”切换到“本轮赢家”</span>
+<h2>03｜无偏的测量，为什么会选出偏高的赢家分？</h2>
+<p>为把选择作用单独看清，这一节设 <strong>b = 0</strong>，并让每个候选的真值都等于 80。一次评测可能得到：</p>
+<div class="table-wrap"><table><thead><tr><th>候选</th><th>真值 J</th><th>本轮噪声 ε</th><th>观测分 Ĵ</th><th>选择结果</th></tr></thead><tbody>
+<tr><td>A</td><td>80</td><td>−4</td><td>76</td><td>未选中</td></tr>
+<tr><td>B</td><td>80</td><td>+1</td><td>81</td><td>未选中</td></tr>
+<tr class="winner-row"><td>C</td><td>80</td><td>+6</td><td>86</td><td><strong>本轮赢家</strong></td></tr>
+</tbody></table></div>
+<p>这里选中 C 的原因是：它恰好拿到了最有利的噪声。它的真值仍然是 80，<strong>选择这个动作没有把它的能力从 80 提升到 86。</strong></p>
+<h3>一轮例子还不够：用四种情况证明“长期偏高”</h3>
+<p>只考虑 A、B 两个候选。各自的噪声独立地以一半概率取 −4 或 +4。于是下面四种情况等概率发生。每轮都保留观测分更高者；平局随意选。</p>
+<div class="table-wrap"><table><thead><tr><th>情况</th><th>A 的分数</th><th>B 的分数</th><th>保留的赢家分</th><th>保留的噪声</th></tr></thead><tbody>
+<tr><td>① 两个都低估</td><td>76</td><td>76</td><td>76</td><td>−4</td></tr>
+<tr><td>② A 低、B 高</td><td>76</td><td>84</td><td>84</td><td>+4</td></tr>
+<tr><td>③ A 高、B 低</td><td>84</td><td>76</td><td>84</td><td>+4</td></tr>
+<tr><td>④ 两个都高估</td><td>84</td><td>84</td><td>84</td><td>+4</td></tr>
+</tbody></table></div>
+<div class="grid">
+<div class="card tint-blue"><h3>始终记录固定 A</h3><p>分数为 76、76、84、84，平均 <strong>80</strong>。正负噪声抵消，测量无偏。</p></div>
+<div class="card tint-amber"><h3>每轮只记录赢家</h3><p>分数为 76、84、84、84，平均 <strong>82</strong>。被保留的噪声平均为 <strong>+2</strong>。</p></div>
+</div>
+<div class="callout"><strong>这就是连接前后文的关键：</strong>固定 A 的 ε 平均为零，不代表“挑出来的那一个 ε”平均也为零。选择规则改变了我们统计哪一批结果。</div>
+<p>这种“根据带噪声分数选赢家，再用同一个分数描述赢家能力”导致的高估，本文称为<strong>选择后的乐观偏差</strong>，也常用 Winner's Curse（赢家诅咒）来描述。这里的“选择”指选模型或 Prompt，不是另一个话题中的人群抽样偏差。</p>
+<details><summary>把“选中谁”和“保留什么噪声”写成公式</summary>
+<p>用 I 表示本轮赢家的编号。I 会随评测结果变化；arg max 表示“返回最大值对应的编号”。先保留一般式：</p>
+<div class="formula">Ĵ<sub>i</sub> = J<sub>i</sub> + b<sub>i</sub> + ε<sub>i</sub><br>I = arg max<sub>i</sub> Ĵ<sub>i</sub><br>Ĵ<sub>I</sub> − J<sub>I</sub> = b<sub>I</sub> + ε<sub>I</sub></div>
+<p>固定候选 i 时，E[ε<sub>i</sub>] = 0；被选中的编号 I 却取决于这些噪声，所以不能直接推出 E[ε<sub>I</sub>] = 0。</p>
+<p>只有在本节“所有 J<sub>i</sub> = 80，所有 b<sub>i</sub> = 0”的特例里，选最高分才等于选最大噪声：</p>
+<div class="formula">Ĵ<sub>I</sub> = 80 + max<sub>i</sub> ε<sub>i</sub><br>选择乐观量 = E[Ĵ<sub>I</sub> − J<sub>I</sub>] = E[max<sub>i</sub> ε<sub>i</sub>]</div>
+<p>两个独立 ±4 噪声的例子中，这个期望就是 2。只有一个候选，或所有候选噪声完全相同时，没有由挑最大值额外产生的乐观量。零均值且有实际噪声差异的多个候选，可以出现严格为正的乐观量。</p>
+<p><strong>与 MSE 的关系：</strong>上面的两候选例子里，赢家分的 Bias = 2、Variance = 12，因此 MSE = 2² + 12 = 16。固定 A 的 MSE 也是 16：选择产生了正偏差，但并不意味着任何情形下 MSE 都一定增大。</p>
+<p class="small">若候选真实能力不同，赢家的 J<sub>I</sub> 本身也随 I 变化，不能直接套用“固定真值”的 Var(Ĵ) + Bias²。始终可先定义误差 e = Ĵ<sub>I</sub> − J<sub>I</sub>，再用 E[e²] = Var(e) + E[e]²；这与只计算 Var(Ĵ<sub>I</sub>) 不是一回事。</p>
+</details>
+<h3>为什么要“冻结赢家，再独立复测”？</h3>
+<p>第一轮选中了 C，就固定 C，不再选一次。用一批没参与选择的新题测 C，相当于重新抽一个误差 η，而不是重复使用刚才的 +6。</p>
+<div class="formula">复测分 J̃<sub>I</sub> = J<sub>I</sub> + b<sub>I</sub> + η<sub>I</sub><small>若复测数据和随机性独立于搜索，且同一候选的新测量误差均值为零，则新误差不再因为先前选中了它而偏正。</small></div>
+<p>在本节 b = 0、真值都为 80 的设定下，赢家复测的<strong>期望</strong>是 80。一次复测仍可能是 77 或 83，甚至高于原来的分数；我们说的是长期规律，不是保证每次下降。</p>
+<div class="callout warn"><strong>复测的两个边界：</strong>它不会消除相同评分尺的系统偏移 b；也不能把同一批旧题再跑一次，就说抽样噪声已经独立。若看完复测结果又改 Prompt 或重新挑赢家，这批数据又参与了选择。</div>
+<p class="bridge">实验将完整演示这三列：固定候选的测量分、选中赢家的旧分数、冻结赢家后的新分数。滑块只改变这条链中的一个因素。</p>
+</section>
+
+<section id="sim">
+<span class="location">② 测量 → ③ 选择 → ④ 复测 · 同一例子的可操作版本</span>
+<h2>04｜把测量、选择、复测完整跑一遍</h2>
+<p><strong>固定不变：</strong>所有候选的真实能力 J = 80，单题波动尺度 σ = 20。默认评分尺无偏 b = 0。每轮先给 N 个候选打分，选最高分，再用独立新噪声复测这个赢家。模拟里没有训练，因此能力不会因为“多选了几次”而提高。</p>
+<p>先按顺序点下面三个按钮，观察<strong>“选择额外乐观量”</strong>，再自己拖动滑块。</p>
+<div class="presets" aria-label="循序实验预设">
+<button type="button" data-preset="single">① 只测一个：没有择优</button>
+<button type="button" data-preset="search" class="active">② 比较 20 个：挑赢家</button>
+<button type="button" data-preset="precise">③ 每个多测题：减少波动</button>
+</div>
+<div class="controls">
+<div class="control"><label for="nRange">每个候选的题数 n <output id="nVal" for="nRange">20</output></label><input id="nRange" type="range" min="20" max="1000" step="20" value="20"><small>改变②测量：题越多，单个平均分的标准误差 SE = 20 / √n 越小。</small></div>
+<div class="control"><label for="cRange">参与比较的候选数 N <output id="cVal" for="cRange">20</output></label><input id="cRange" type="range" min="1" max="100" step="1" value="20"><small>改变③选择：每个候选都要测 n 道题。N 增大时总预算也增大，不是固定总预算比较。</small></div>
+</div>
+<details><summary>进阶：评分尺偏移和共同噪声分别改变哪一环？</summary>
+<p><strong>b 控制评分尺。</strong>给所有候选固定多加 5 分，不改变谁胜出，但搜索分和独立复测分都会整体提高 5 分。</p>
+<p><strong>ρ 控制候选之间的噪声相似程度。</strong>如果某一批题让所有候选恰好多得同样的分，这部分“共同运气”不改变排名。只有候选间不同的噪声会影响谁被选中。这里保持每个候选自身的 SE 不变。</p>
+<div class="controls">
+<div class="control"><label for="bRange">共同评分偏移 b <output id="bVal" for="bRange">0</output></label><input id="bRange" type="range" min="-10" max="10" step="1" value="0"><small>用于验证：换新题不能修好一把有固定偏移的尺子。</small></div>
+<div class="control"><label for="rhoRange">候选噪声相关性 ρ <output id="rhoVal" for="rhoRange">0%</output></label><input id="rhoRange" type="range" min="0" max="100" step="10" value="0"><small>0%：各自波动；100%：每轮所有候选一起升降。这不是同一个候选内部题目之间的相关性。</small></div>
+</div>
+<div class="presets"><button type="button" data-preset="biased">评分尺统一多给 5 分</button><button type="button" data-preset="shared">只剩完全共同噪声</button></div>
+<div class="formula">ε<sub>i</sub> = SE × [√ρ Z<sub>共同</sub> + √(1−ρ) Z<sub>i</sub>]<small>Z 为独立标准正态变量。该构造保证 Var(εᵢ) = SE²、候选间相关系数为 ρ。它是说明机制的等相关模型，不是对真实评测集的完整刻画。</small></div>
+</details>
+<h3>A. 先看一轮：谁被选中，复测的又是谁？</h3>
+<div class="card">
+<div class="round-head"><h3 id="roundLabel">第 1 轮</h3><button id="nextRound" type="button">换一轮噪声 →</button></div>
+<p class="small">每行是一版候选。表格展示前 5 个；若赢家在后面，会额外列出赢家。所有候选都参与了比较。</p>
+<div class="table-wrap"><table><thead><tr><th>候选</th><th>真值 J</th><th>固定偏移 b</th><th>本轮噪声 ε</th><th>观测分 Ĵ</th></tr></thead><tbody id="candidateRows"></tbody></table></div>
+<div class="round-result"><div><span>选中的候选：<b id="selectedName">—</b></span><strong id="selectedScore">—</strong><span class="small">这是用于选择的旧分数。</span></div><div><span>冻结它，再用新噪声复测</span><strong id="freshScore">—</strong><span class="small">复测仍是同一个候选，不是新一轮的冠军。</span></div></div>
+<p class="small" id="roundExplanation"></p>
+</div>
+<h3>B. 再看长期：同一套规则反复运行会留下什么？</h3>
+<div class="metric-row">
+<div class="metric"><span>固定候选的测量均值<br>理论值：80 + b</span><strong id="fixedVal">—</strong></div>
+<div class="metric selected"><span>每轮挑出赢家后<br>旧分数的模拟均值</span><strong id="winnerVal">—</strong></div>
+<div class="metric fresh"><span>每轮冻结各自赢家后<br>独立复测的模拟均值</span><strong id="freshVal">—</strong></div>
+<div class="metric"><span>选择额外乐观量<br>赢家旧分均值 − (80 + b)</span><strong id="optimismVal">—</strong></div>
+</div>
+<p class="small">单个候选测量的标准误差 SE：<strong id="seVal">—</strong> 分。真值一直是 <strong class="target">80</strong>，不会随任何滑块变化。</p>
+<div class="comparison" aria-label="长期分数比较，图条以120分为显示尺度">
+<div class="comparison-row"><span>真实能力</span><div class="bar-track"><div class="bar-fill green" style="width:66.6667%"></div></div><b>80.00</b></div>
+<div class="comparison-row"><span>赢家的旧分数</span><div class="bar-track"><div class="bar-fill amber" id="winnerBar"></div></div><b id="winnerBarLabel">—</b></div>
+<div class="comparison-row"><span>赢家的独立复测</span><div class="bar-track"><div class="bar-fill" id="freshBar"></div></div><b id="freshBarLabel">—</b></div>
+</div>
+<div class="callout good" id="simInterpretation" role="status" aria-live="polite"></div>
+<p class="small" id="simStatus"></p>
+<details><summary>模拟口径与边界：为什么它不能预测真实 GEPA 会掉几分？</summary>
+<p>这是连续得分的高斯教学模型，不是正确率或严格限制在 0–100 的分数。正态噪声可能让单轮分数超出 0–100；计算不截断，图条以 120 为显示上界。所有候选能力相同，只为隔离选择作用。</p>
+<p>采用固定随机种子。生成 1,000 组噪声及其相反数，组成 2,000 轮配对模拟；这样会抵消共同噪声和固定候选的有限模拟均值，便于比较滑块。配对轮次并非相互独立，不能用“2,000 个独立样本”的公式计算置信区间。独立复测噪声使用另一组随机数，配对均值也会抵消。</p>
+<p>参数变化复用同一组基础随机数，方便单因素比较。样本量 n 通过 SE 改变噪声大小；本模拟没有逐题生成数据，也没有实现反思、变异、训练或 Pareto 选择。</p>
+</details>
+<p class="bridge">实验解释的是：评测噪声如何经过选择变成乐观分数。GEPA 接下来要回答的，是这条链在真实搜索流程中分别出现在哪里。</p>
+</section>
+
+<section id="gepa">
+<span class="location">把同一张地图映射到真实流程</span>
+<h2>05｜GEPA 并没有换一个统计问题：它让测量参与了反复搜索</h2>
+<p>把 GEPA 暂时理解为一个 Prompt 优化流程：运行候选、收集反馈、反思并提出修改，再评测候选、决定如何继续搜索。它使用评测信号，因此同样要区分<strong>能力变化</strong>和<strong>测量误差</strong>。这个流程概括来自 <a href="https://gepa-ai.github.io/gepa/guides/" target="_blank" rel="noopener noreferrer">GEPA 官方指南</a>。</p>
+<div class="flow">
+<div><small>① 定义目标</small><b>什么算更好？</b><p>确定真实任务分布、奖励和评分规则。</p></div>
+<div><small>② 执行测量</small><b>得到反馈与分数</b><p>有限题目和随机执行产生有误差的观察。</p></div>
+<div><small>③ 搜索与选择</small><b>改写、比较、保留</b><p>候选内容和后续搜索方向会依赖先前观察。</p></div>
+<div><small>④ 独立报告</small><b>冻结后再检验</b><p>未参与搜索的数据用于检验最终方案。</p></div>
+</div>
+<div class="callout warn"><strong>先纠正一个会误导理解的简化：</strong>GEPA 的候选选择不等于“每一步都挑最高平均分”。官方默认的 <code>pareto</code> 策略根据候选在不同评测项上的优势，采样下一步要修改的父候选；另有按验证总分选父候选的 <code>current_best</code> 等策略。前面的 arg max 实验是选择偏差的最小例子，不是 GEPA 算法复刻。参见 <a href="https://gepa-ai.github.io/gepa/guides/candidate-selection/" target="_blank" rel="noopener noreferrer">官方候选选择说明</a>。</div>
+<h3>为什么不同选择策略，仍然需要这套误差框架？</h3>
+<p>因为只要搜索方向受有限评测数据影响，就可能适配其中的偶然特征。真实搜索会产生真改进，也可能利用数据中的噪声；两者可以同时存在。前面“所有能力都为 80”的实验刻意没有真改进，所以能单独展示后一种机制。</p>
+<div class="formula">看见搜索分上升 ≠ 已经分清：真实能力提高 / 评分偏移 / 被选择的好运</div>
+<p><strong>这是从统计机制推导出的评测建议，不是宣称 GEPA 必然过拟合或必然下降。</strong>真实候选能力不同，候选还会根据反馈自适应生成，所以不能把模拟的 N 或乐观分数直接代入某次 GEPA 运行。模型选择准则本身可能被过拟合，是 <a href="https://jmlr.org/papers/v11/cawley10a.html" target="_blank" rel="noopener noreferrer">Cawley 与 Talbot 的模型选择研究</a>讨论的通用问题。</p>
+<h3>按发生位置处理，而不是把所有问题都叫“bias”</h3>
+<div class="table-wrap"><table><thead><tr><th>链上的位置</th><th>要排查什么？</th><th>对应动作</th><th>这个动作解决不了什么？</th></tr></thead><tbody>
+<tr><td>① 目标 / ② 测量</td><td>数据不代表真实任务；Judge 长期偏向某种答案</td><td>检查样本代表性、奖励定义和人工校准，必要时按目标分布加权</td><td>仅增加题数不能修正错误目标</td></tr>
+<tr><td>② 测量</td><td>题少、生成随机性大，候选分数不稳定</td><td>增加有效样本、重复运行；在同题上做配对比较并估计差值的不确定性</td><td>固定种子只改善复现性，不代表消除了方差</td></tr>
+<tr><td>③ 搜索与选择</td><td>反复根据同一批题选候选、调参数、决定停止</td><td>把这些数据都视为开发数据，记录搜索过程和预算</td><td>Pareto、固定题集或低偏差评分都不是“不会过拟合”的保证</td></tr>
+<tr><td>④ 最终复测</td><td>报告是否仍使用了参与选择的分数</td><td>冻结最终候选、奖励和协议；使用独立且有代表性的测试题，报告不确定性</td><td>一次复测仍有噪声；评分尺偏移仍可能保留</td></tr>
+</tbody></table></div>
+<h3>一个可以直接照着执行的评测安排</h3>
+<ol>
+<li><strong>开发阶段：</strong>用于反思的样本和用于挑选候选的验证样本，都可能影响最终结果。名字叫“验证集”，不代表它没有参加选择。</li>
+<li><strong>冻结阶段：</strong>确定最终 Prompt、模型版本、生成参数、评分规则与统计方法。</li>
+<li><strong>报告阶段：</strong>用没有参与上述决定的测试数据，评估基线和最终方案；优先在相同测试题上比较两者，按题目相关性和抽样方式报告适当的不确定性。</li>
+<li><strong>继续开发时：</strong>若看了测试结果又修改方案，这批测试数据就进入开发流程，不能继续把下一次结果说成完全独立的最终检验。</li>
+</ol>
+<p class="bridge">现在链条闭合了：Bias、Variance、MSE 解释测量；Winner's Curse 解释选择如何改变被保留的误差；独立复测检查高分是否能脱离原来的选择过程。</p>
+</section>
+
+<section id="recap">
+<h2>06｜用四个问题，检查这条链是否真的连起来了</h2>
+<details><summary>A 的真实能力是 80，反复小样本评测后的平均是 82，就说明 Bias = 2 吗？</summary><p class="answer">如果只是有限轮实验的平均为 82，仍可能是随机波动，不能直接当作精确的 Bias。从目标分布随机抽题、按目标标准评分并求均值时，理论期望为 80，Bias 为 0，即使每轮只测一道题也如此。若 Judge 每题固定多给 2 分，理论期望才变成 82，Bias 为 2。在得分固定的例子里，全量按目标标准正确汇总仍是 80；全量却仍用偏移的 Judge 评分，就会报告 82。</p></details>
+<details><summary>一个 Prompt 真值 80，这次测到 88。可以直接说 Bias = 8 吗？</summary><p class="answer">不能。8 是本次误差，可能由长期偏移 b 和随机波动 ε 共同组成。Bias 要看固定评测流程反复运行后的长期平均减去真值。</p></details>
+<details><summary>每个候选都无偏，挑出来的最高分也一定无偏吗？</summary><p class="answer">不一定。固定编号 i 的噪声均值为零，与按分数选择的编号 I 的噪声均值为零，是不同命题。两个 ±4 噪声候选的完整例子中，各自均值 80，赢家均值却是 82。</p></details>
+<details><summary>把赢家放到独立测试集上，就能解决所有误差吗？</summary><p class="answer">不能。独立测试避免重复使用搜索时挑中的同一份噪声，但测试仍有抽样波动；相同 Judge 的固定偏移、目标分布不匹配也可能仍在。若又按测试分选候选，选择问题会重新出现。</p></details>
+<div class="callout good"><strong>以后看到一个“最高分”，按这个顺序追问：</strong><br>它测的是我的真实目标吗？ → 测量波动有多大？ → 它从多少次比较中被挑出来？ → 冻结之后，有没有独立复测？</div>
+<div class="source-list"><p>参考：<a href="https://arxiv.org/abs/2507.19457" target="_blank" rel="noopener noreferrer">GEPA 原论文</a> · <a href="https://gepa-ai.github.io/gepa/guides/candidate-selection/" target="_blank" rel="noopener noreferrer">GEPA 候选选择文档</a> · <a href="https://jmlr.org/papers/v11/cawley10a.html" target="_blank" rel="noopener noreferrer">模型选择过拟合与评测偏差（JMLR, 2010）</a>。正文的有限情形计算与教学模拟用于解释机制，不代表论文的实测结果。</p></div>
+<a href="#framework" class="back-top">回到整张框架图 ↑</a>
+</section>
+<div class="footer">大仙的知识手记 · 先看清对象，再理解误差。</div>
+</main>
+<script>
+// 固定随机数并成对使用正反噪声，让单因素对照稳定；所有计算均在本地完成。
+(function () {
+  const $ = id => document.getElementById(id);
+  const pairs = 1000, maximumCandidates = 100;
+  let currentRound = 0;
+  function rng(seed) {
+    let state = seed >>> 0;
+    return () => {
+      state += 0x6D2B79F5;
+      let v = state;
+      v = Math.imul(v ^ (v >>> 15), v | 1);
+      v ^= v + Math.imul(v ^ (v >>> 7), v | 61);
+      return ((v ^ (v >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const random = rng(20261112);
+  function normal() {
+    const u = 1 - random(), v = random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  const samples = Array.from({ length: pairs }, () => ({ shared: normal(), fresh: normal(), individual: Array.from({ length: maximumCandidates }, normal) }));
+  const presets = { single: [20, 1, 0, 0], search: [20, 20, 0, 0], precise: [400, 20, 0, 0], biased: [20, 20, 5, 0], shared: [20, 20, 0, 100] };
+  const ids = ['nRange', 'cRange', 'bRange', 'rhoRange'];
+  const fmt = x => (Math.abs(x) < 0.00000001 ? 0 : x).toFixed(2);
+  function trial(sample, sign, config) {
+    const noise = sample.individual.slice(0, config.N).map(z => config.se * sign * (Math.sqrt(config.rho) * sample.shared + Math.sqrt(1 - config.rho) * z));
+    let best = 0;
+    for (let i = 1; i < noise.length; i++) if (noise[i] > noise[best]) best = i;
+    return { noise, best, observed: 80 + config.b + noise[best], fresh: 80 + config.b + config.se * sign * sample.fresh };
+  }
+  function showRound(config) {
+    const sample = samples[Math.floor(currentRound / 2) % pairs];
+    const sign = currentRound % 2 ? -1 : 1;
+    const result = trial(sample, sign, config);
+    const displayed = Array.from({ length: Math.min(config.N, 5) }, (_, i) => i);
+    if (!displayed.includes(result.best)) displayed.push(result.best);
+    const rows = displayed.map(i => {
+      const row = document.createElement('tr');
+      if (i === result.best) row.className = 'winner-row';
+      const values = [`P${i + 1}${i === result.best ? ' · 选中' : ''}`, '80.00', fmt(config.b), fmt(result.noise[i]), fmt(80 + config.b + result.noise[i])];
+      values.forEach(value => { const cell = document.createElement('td'); cell.textContent = value; cell.className = 'number'; row.append(cell); });
+      return row;
+    });
+    $('candidateRows').replaceChildren(...rows);
+    $('roundLabel').textContent = `第 ${currentRound + 1} 轮 · ${config.N} 个候选`;
+    $('selectedName').textContent = `P${result.best + 1}`;
+    $('selectedScore').textContent = fmt(result.observed);
+    $('freshScore').textContent = fmt(result.fresh);
+    $('roundExplanation').textContent = `本轮保留的噪声为 ${fmt(result.noise[result.best])} 分；复测重新抽到的噪声为 ${fmt(result.fresh - 80 - config.b)} 分。能力始终是 80，评分尺偏移始终是 ${config.b}。单轮结果可能上下波动，请结合下方长期均值理解。`;
+  }
+  function simulate() {
+    const [n, N, b, percentage] = ids.map(id => Number($(id).value));
+    const config = { n, N, b, rho: percentage / 100, se: 20 / Math.sqrt(n) };
+    let sumWinner = 0, sumFresh = 0;
+    for (const sample of samples) {
+      for (const sign of [1, -1]) {
+        const result = trial(sample, sign, config);
+        sumWinner += result.observed;
+        sumFresh += result.fresh;
+      }
+    }
+    const winner = sumWinner / (pairs * 2), fresh = sumFresh / (pairs * 2), optimism = winner - (80 + b);
+    $('nVal').textContent = n;
+    $('cVal').textContent = N;
+    $('bVal').textContent = b;
+    $('rhoVal').textContent = percentage + '%';
+    $('seVal').textContent = fmt(config.se);
+    $('fixedVal').textContent = fmt(80 + b);
+    $('winnerVal').textContent = fmt(winner);
+    $('freshVal').textContent = fmt(fresh);
+    $('optimismVal').textContent = fmt(optimism);
+    $('winnerBarLabel').textContent = fmt(winner);
+    $('freshBarLabel').textContent = fmt(fresh);
+    $('winnerBar').style.width = Math.max(0, Math.min(100, winner / 120 * 100)) + '%';
+    $('freshBar').style.width = Math.max(0, Math.min(100, fresh / 120 * 100)) + '%';
+    const selection = N === 1 ? '只有一个候选，没有按高分择优，所以选择额外乐观量为 0。' : percentage === 100 ? '所有候选的噪声完全相同，不能通过排名挑出更有利的噪声，所以选择额外乐观量为 0；但每轮绝对分数仍会波动。' : `单个候选的标准误差是 ${fmt(config.se)} 分；从 ${N} 个候选里挑最高分，平均额外保留了 ${fmt(optimism)} 分的正向噪声。`;
+    $('simInterpretation').textContent = selection + ` 冻结赢家后，独立复测的均值回到 ${fmt(80 + b)}。` + (b === 0 ? '这里它等于真值 80，因为评分尺无偏。' : `它仍比真值偏移 ${b} 分，因为独立复测没有改变评分尺。`);
+    $('simStatus').textContent = `2,000 轮固定种子的配对噪声模拟；比较参数时复用基础噪声。样本量 n = ${n}，候选数 N = ${N}，共同偏移 b = ${b}，相关性 ρ = ${percentage}%。`;
+    document.querySelectorAll('[data-preset]').forEach(button => {
+      const active = presets[button.dataset.preset].every((v, i) => v === Number($(ids[i]).value));
+      button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+    });
+    showRound(config);
+  }
+  ids.forEach(id => $(id).addEventListener('input', simulate));
+  document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => {
+    presets[button.dataset.preset].forEach((value, i) => { $(ids[i]).value = value; });
+    currentRound = 0; simulate();
+  }));
+  $('nextRound').addEventListener('click', () => { currentRound = (currentRound + 1) % (pairs * 2); const [n, N, b, rho] = ids.map(id => Number($(id).value)); showRound({ n, N, b, rho: rho / 100, se: 20 / Math.sqrt(n) }); });
+  simulate();
+})();
+</script>
+</body>
+</html>

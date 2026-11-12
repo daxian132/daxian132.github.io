@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520">
+<defs><pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#bdd5e9" stroke-opacity=".35"/></pattern></defs>
+<rect width="720" height="520" rx="24" fill="#eef6fc"/><rect width="720" height="520" fill="url(#grid)"/>
+<g font-family="ui-monospace,monospace" text-anchor="middle"><text x="360" y="74" fill="#698ba8" font-size="17" letter-spacing="4">THE CONFUSION MATRIX</text>
+<rect x="170" y="110" width="180" height="137" rx="17" fill="#cbeade"/><rect x="365" y="110" width="180" height="137" rx="17" fill="#f7e6c6"/><rect x="170" y="262" width="180" height="137" rx="17" fill="#f5deda"/><rect x="365" y="262" width="180" height="137" rx="17" fill="#cde2f6"/>
+<g font-size="42" font-weight="600"><text x="260" y="181" fill="#3a7b69">TP</text><text x="455" y="181" fill="#a17d35">FN</text><text x="260" y="333" fill="#b4716b">FP</text><text x="455" y="333" fill="#4c7da8">TN</text></g>
+<g font-size="14"><text x="260" y="218" fill="#4a7c6d">TRUE POSITIVE</text><text x="455" y="218" fill="#947735">FALSE NEGATIVE</text><text x="260" y="370" fill="#a96d67">FALSE POSITIVE</text><text x="455" y="370" fill="#557e9f">TRUE NEGATIVE</text></g>
+<text x="360" y="454" fill="#597e9e" font-size="19">same results · different perspectives</text></g>
+<path d="m586 80 3 10 10 3-10 3-3 10-3-10-10-3 10-3z" fill="#d1ac62"/>
+</svg>

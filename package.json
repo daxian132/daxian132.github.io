@@ -1,0 +1,15 @@
+{
+  "name": "sky-library",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Buildless HTML knowledge library; dependencies are for DOM tests only.",
+  "scripts": {
+    "test": "node --test tests/catalog.test.mjs",
+    "test:dom": "node tests/dom.cjs",
+    "preview": "python3 -m http.server 8000 --bind 127.0.0.1",
+    "test:bias": "node tests/bias-guide.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "29.1.1"
+  }
+}

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#edf5fc" />
+    <meta
+      name="description"
+      content="大仙的知识手记。在晴空下记录算法、数学与编程，用交互和可视化，把复杂的知识慢慢读懂。"
+    />
+    <title>晴空图书室 · 大仙的知识手记</title>
+    <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/css/site.css" />
+    <link rel="preload" href="assets/images/sky-library.png" as="image" />
+    <script type="module" src="assets/js/catalog.js"></script>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#library">跳到知识列表</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="晴空图书室首页"
+          ><img
+            src="assets/images/favicon.svg"
+            width="36"
+            height="36"
+            alt=""
+          /><span>晴空图书室<small>DA XIAN'S NOTES</small></span></a
+        >
+        <nav class="main-nav" aria-label="主导航">
+          <a class="nav-home active" href="./" aria-current="page">首页</a
+          ><a href="#library">知识库</a><a href="#about">关于</a>
+        </nav>
+        <a
+          class="github-link"
+          href="https://github.com/daxian132/daxian132.github.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="在新标签页打开 GitHub 仓库"
+          ><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.87c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.77c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+            /></svg
+          ><span>GitHub</span><span aria-hidden="true">↗</span></a
+        >
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="hero" aria-labelledby="hero-title">
+        <img
+          class="hero-art"
+          src="assets/images/sky-library.png"
+          width="1536"
+          height="1024"
+          alt="蓝发少女手捧书本，坐在面朝晴空与海面的图书室窗边"
+          fetchpriority="high"
+        />
+        <div class="hero-shade"></div>
+        <div class="hero-copy">
+          <span class="eyebrow"
+            ><span class="little-sun" aria-hidden="true">☀</span>
+            晴空之下，好奇心不打烊</span
+          >
+          <h1 id="hero-title">把复杂的知识，<br />慢慢<span>读懂。</span></h1>
+          <p>
+            这里收藏算法的灵感，也记录每一次恍然大悟。<br />翻开一页，让抽象的世界变得清晰一点。
+          </p>
+          <a class="button primary" href="#library"
+            >探索知识库 <span aria-hidden="true">↗</span></a
+          ><span class="hero-note">一页手记，一点进步。</span>
+        </div>
+        <span class="hero-stamp" aria-hidden="true">空色の図書室 <i>✧</i></span>
+      </section>
+
+      <div class="content-layout">
+        <aside class="sidebar" aria-label="作者与知识分类">
+          <section class="panel profile" id="about">
+            <div class="profile-sky"></div>
+            <div class="avatar">
+              <img
+                src="assets/images/sky-library.png"
+                alt="图书室的蓝发少女头像"
+                width="80"
+                height="80"
+              />
+            </div>
+            <span class="profile-status"><span></span> 持续学习中</span>
+            <h2>大仙 <span>✧</span></h2>
+            <p>在算法与想象力之间，<br />搭一间自己的图书室。</p>
+            <div class="profile-stats">
+              <div><strong id="total-count">—</strong><span>篇手记</span></div>
+              <div>
+                <strong id="category-count">—</strong><span>个分类</span>
+              </div>
+              <div><strong id="tag-count">—</strong><span>个标签</span></div>
+            </div>
+            <div class="profile-foot">
+              <span aria-hidden="true">⌘</span> 记录 · 理解 · 连接
+            </div>
+          </section>
+          <details class="panel category-panel" open>
+            <summary>
+              <span
+                ><span class="section-symbol" aria-hidden="true">▤</span>
+                知识目录</span
+              ><span class="chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div id="category-list" class="category-list">
+              <p class="muted loading-copy">正在整理书架…</p>
+            </div>
+            <p class="sidebar-note">知识慢慢积累，目录随之生长。</p>
+          </details>
+          <section class="panel tags-panel">
+            <h2>
+              <span class="section-symbol" aria-hidden="true">#</span> 知识标签
+            </h2>
+            <div id="tag-list" class="tag-cloud"></div>
+          </section>
+          <div class="sidebar-quote">
+            <span aria-hidden="true">“</span>
+            <p>学到的每一点，<br />都会成为看世界的新视角。</p>
+            <small>A LITTLE KNOWLEDGE, EVERY DAY</small>
+          </div>
+        </aside>
+
+        <section class="library" id="library" aria-labelledby="library-title">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">THE KNOWLEDGE COLLECTION</span>
+              <h2 id="library-title">
+                知识手记<span class="heading-dot">.</span>
+              </h2>
+            </div>
+            <span class="collection-label"
+              ><span aria-hidden="true">✦</span> 保持好奇，持续生长</span
+            >
+          </div>
+          <form class="search-form" role="search">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m16 16 5 5" /></svg
+            ><label class="sr-only" for="search">搜索知识标题、摘要或标签</label
+            ><input
+              id="search"
+              name="q"
+              type="search"
+              placeholder="寻找一个知识点，例如：Recall、混淆矩阵…"
+              autocomplete="off"
+            /><kbd aria-hidden="true">/</kbd>
+          </form>
+          <div class="collection-toolbar">
+            <div class="result-label">
+              <span class="status-dot"></span
+              ><span id="result-label" role="status" aria-live="polite"
+                >正在加载知识手记…</span
+              >
+            </div>
+            <label class="sort-control"
+              >排序<select id="sort" aria-label="文章排序">
+                <option value="recent">最近收录</option>
+                <option value="title">标题排序</option>
+              </select></label
+            >
+          </div>
+          <div id="active-filters" class="active-filters" hidden></div>
+          <div id="entry-list" class="entry-list" aria-busy="true"></div>
+          <div id="empty-state" class="panel empty-state" hidden>
+            <span class="empty-icon" aria-hidden="true">⌕</span>
+            <h3>这一页，还没有找到</h3>
+            <p>试试其他关键词，或清除分类和标签筛选。</p>
+            <button id="reset-filters" class="button secondary" type="button">
+              查看全部手记
+            </button>
+          </div>
+          <div id="load-error" class="panel empty-state" hidden>
+            <h3>书架暂时没有打开</h3>
+            <p>目录加载失败，请刷新重试。你也可以直接阅读已有文章。</p>
+            <a
+              class="button secondary"
+              href="content/ai/classification_metrics_why_each_fixed.html"
+              >打开分类指标可视化 ↗</a
+            >
+          </div>
+          <noscript
+            ><div class="panel empty-state">
+              <p>开启 JavaScript 可使用搜索与分类，也可以直接打开文章。</p>
+              <a href="content/ai/classification_metrics_why_each_fixed.html"
+                >分类指标：一张图理解</a
+              >
+            </div></noscript
+          >
+          <div class="collection-end" id="collection-end" hidden>
+            <span></span>
+            <p>书签先放在这里，下一页，继续探索 <i>✧</i></p>
+            <span></span>
+          </div>
+          <div class="reading-note">
+            <div class="note-icon" aria-hidden="true">✎</div>
+            <div>
+              <h3>让知识可以看见，也可以亲手试一试。</h3>
+              <p>
+                这里的手记，可以是一段推导、一份记录，也可以是一张能交互的图。
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <a href="./">晴空图书室 <span>✧</span></a>
+      <p>把好奇写成手记，把手记连成世界。</p>
+      <span>大仙的知识手记 · Built with curiosity</span>
+    </footer>
+  </body>
+</html>
